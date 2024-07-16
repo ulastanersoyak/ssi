@@ -1,3 +1,6 @@
+#ifndef SLAVE_BUS_HPP
+#define SLAVE_BUS_HPP
+
 #include "devices/slave.hpp"
 
 #if (__cplusplus == 202302L)
@@ -6,11 +9,13 @@
 #include <iostream>
 #endif
 
+namespace slave_bus_tests
+{
 constexpr void
 bus_byte_size ()
 {
   slave<1> ss{};
-  static_assert (ss.get_bus_size () == 1, "ssi device failed");
+  static_assert (ss.get_bus_size () == 1, "slave<1> device failed");
 
   slave<8> s8{};
   static_assert (s8.get_bus_size () == 1, "slave<8> device failed");
@@ -26,7 +31,7 @@ constexpr void
 bus_bit_size ()
 {
   constexpr slave<1> s1{};
-  static_assert (s1.get_data_bits ().size () == 1, "ssi device failed");
+  static_assert (s1.get_data_bits ().size () == 1, "slave<1> device failed");
 
   constexpr slave<8> s8{};
   static_assert (s8.get_data_bits ().size () == 8, "slave<8> device failed");
@@ -39,3 +44,5 @@ bus_bit_size ()
   static_assert (s32.get_data_bits ().size () == 32,
                  "slave<32> device failed");
 }
+}
+#endif // !SLAVE_BUS_HPP

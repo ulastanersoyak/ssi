@@ -32,12 +32,6 @@ public:
   }
 
   [[nodiscard]] constexpr auto
-  get_bus_size () const noexcept
-  {
-    return sizeof (this->data);
-  }
-
-  [[nodiscard]] constexpr auto
   get_data () const noexcept
   {
     return this->data;
@@ -56,6 +50,13 @@ public:
 #endif
       }
   }
+#ifdef TEST
+  [[nodiscard]] constexpr auto
+  get_bus_size () const noexcept
+  {
+    return sizeof (this->data);
+  }
+#endif // ! TEST
 };
 
 #endif // !MASTER_HPP

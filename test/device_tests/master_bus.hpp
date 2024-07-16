@@ -1,3 +1,6 @@
+#ifndef MASTER_BUS_HPP
+#define MASTER_BUS_HPP
+
 #include "devices/master.hpp"
 #include "devices/slave.hpp"
 
@@ -7,6 +10,8 @@
 #include <iostream>
 #endif
 
+namespace master_bus_test
+{
 constexpr void
 bus_byte_size ()
 {
@@ -34,3 +39,6 @@ bus_byte_size ()
   m32.read_data (s32.get_data ());
   static_assert (m32.get_bus_size () == 4, "master<32> device failed");
 }
+}
+
+#endif // !MASTER_BUS_HPP

@@ -36,6 +36,13 @@ public:
       }
   }
 
+  [[nodiscard]] constexpr auto
+  get_data () const noexcept
+  {
+    return this->data;
+  }
+#ifdef TEST
+
   constexpr std::array<std::uint8_t, slave_bus_width>
   get_data_bits () const noexcept
   {
@@ -56,12 +63,7 @@ public:
   {
     return sizeof (this->data);
   }
-
-  [[nodiscard]] constexpr auto
-  get_data () const noexcept
-  {
-    return this->data;
-  }
+#endif // ! TEST
 };
 
 #endif // !SLAVE_HPP
