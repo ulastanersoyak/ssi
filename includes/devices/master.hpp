@@ -14,6 +14,9 @@ template <std::uint8_t master_bus_width>
 class master : public bus_width_helper<master_bus_width>
 {
 
+  using typename bus_width_helper<master_bus_width>::bus_wide_integer;
+  bus_wide_integer data{ 0 };
+
 public:
   constexpr void
   read_data (auto data_) noexcept
@@ -40,13 +43,12 @@ public:
 #endif
       }
   }
-#if (TEST == 1)
+
   [[nodiscard]] constexpr auto
   get_bus_size () const noexcept
   {
     return sizeof (this->data);
   }
-#endif // ! TEST
 };
 
 #endif // !MASTER_HPP

@@ -11,6 +11,7 @@ template <std::uint8_t slave_bus_width>
 class slave : public bus_width_helper<slave_bus_width>
 {
   using typename bus_width_helper<slave_bus_width>::bus_wide_integer;
+  bus_wide_integer data{ 0 };
 
 public:
   constexpr void
@@ -32,7 +33,6 @@ public:
     return this->data;
   }
 
-#if (TEST == 1)
   constexpr std::array<std::uint8_t, slave_bus_width>
   get_data_bits () const noexcept
   {
@@ -53,7 +53,6 @@ public:
   {
     return sizeof (this->data);
   }
-#endif // ! TEST
 };
 
 #endif // !SLAVE_HPP

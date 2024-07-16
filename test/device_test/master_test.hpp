@@ -1,14 +1,8 @@
-#ifndef MASTER_BUS_HPP
-#define MASTER_BUS_HPP
+#ifndef MASTER_TEST_HPP
+#define MASTER_TEST_HPP
 
 #include "devices/master.hpp"
 #include "devices/slave.hpp"
-
-#if (__cplusplus == 202302L)
-#include <print>
-#else
-#include <iostream>
-#endif
 
 namespace master_bus_test
 {
@@ -41,4 +35,4 @@ bus_byte_size ()
 }
 }
 
-#endif // !MASTER_BUS_HPP
+#endif // !MASTER_TEST_HPP

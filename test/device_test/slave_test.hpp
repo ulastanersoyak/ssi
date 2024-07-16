@@ -1,13 +1,7 @@
-#ifndef SLAVE_BUS_HPP
-#define SLAVE_BUS_HPP
+#ifndef SLAVE_TEST_HPP
+#define SLAVE_TEST_HPP
 
 #include "devices/slave.hpp"
-
-#if (__cplusplus == 202302L)
-#include <print>
-#else
-#include <iostream>
-#endif
 
 namespace slave_bus_tests
 {
@@ -45,4 +39,4 @@ bus_bit_size ()
                  "slave<32> device failed");
 }
 }
-#endif // !SLAVE_BUS_HPP
+#endif // !SLAVE_TEST_HPP

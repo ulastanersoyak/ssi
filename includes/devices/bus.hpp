@@ -21,8 +21,6 @@ protected:
       std::conditional_t<bus_width == BUS_WIDTH_8, std::uint8_t,
                          std::conditional_t<bus_width == BUS_WIDTH_16,
                                             std::uint16_t, std::uint32_t> > >;
-
-  bus_wide_integer data{ 0 };
 };
 
 #endif // !BUS_HPP
