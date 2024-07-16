@@ -9,7 +9,7 @@
 constexpr void
 bus_byte_size ()
 {
-  ssi ss{};
+  slave<1> ss{};
   static_assert (ss.get_bus_size () == 1, "ssi device failed");
 
   slave<8> s8{};
@@ -25,7 +25,7 @@ bus_byte_size ()
 constexpr void
 bus_bit_size ()
 {
-  constexpr ssi s1{};
+  constexpr slave<1> s1{};
   static_assert (s1.get_data_bits ().size () == 1, "ssi device failed");
 
   constexpr slave<8> s8{};
