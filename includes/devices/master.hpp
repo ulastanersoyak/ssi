@@ -2,7 +2,6 @@
 #define MASTER_HPP
 
 #include <cstdint>
-#include <type_traits>
 #if (__cplusplus == 202302L)
 #include <print>
 #else
@@ -11,18 +10,9 @@
 
 #include "bus.hpp"
 
-template <std::uint8_t master_bus_width> class master
+template <std::uint8_t master_bus_width>
+class master : public bus_width_helper<master_bus_width>
 {
-  static_assert (master_bus_width == 1 || master_bus_width == 8
-                     || master_bus_width == 16 || master_bus_width == 32,
-                 "master_bus_width must be 1, 8, 16, or 32");
-
-  using bus_wide_integer = std::conditional_t<
-      master_bus_width == BUS_WIDTH_1, std::uint8_t,
-      std::conditional_t<master_bus_width == BUS_WIDTH_8, std::uint8_t,
-                         std::conditional_t<master_bus_width == BUS_WIDTH_16,
-                                            std::uint16_t, std::uint32_t> > >;
-  bus_wide_integer data{ 0 };
 
 public:
   constexpr void
@@ -42,7 +32,7 @@ public:
   {
     for (std::uint8_t idx = 0; idx < master_bus_width; ++idx)
       {
-        bool bit = (data & (1U << idx));
+        bool bit = (this->data & (1U << idx));
 #if (__cplusplus == 202302L)
         std::println ("bit{} := {}", idx, bit ? 1 : 0);
 #else
@@ -50,7 +40,7 @@ public:
 #endif
       }
   }
-#ifdef TEST
+#if (TEST == 1)
   [[nodiscard]] constexpr auto
   get_bus_size () const noexcept
   {

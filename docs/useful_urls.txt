@@ -6,7 +6,7 @@ interfaces:
 crc:
   https://stackoverflow.com/questions/10564491/function-to-calculate-a-crc16-checksum
   https://en.wikipedia.org/wiki/Cyclic_redundancy_check
-  https://www.gigacalculator.com/calculators/crc-calculator.php
+  https://crccalc.com/
 
 c++:
   https://stackoverflow.com/questions/2324658/how-to-determine-the-version-of-the-c-standard-used-by-the-compiler

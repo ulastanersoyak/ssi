@@ -4,22 +4,13 @@
 #include <array>
 #include <cstdint>
 #include <random>
-#include <type_traits>
 
 #include "bus.hpp"
 
-template <std::uint8_t slave_bus_width> class slave
+template <std::uint8_t slave_bus_width>
+class slave : public bus_width_helper<slave_bus_width>
 {
-  static_assert (slave_bus_width == 1 || slave_bus_width == 8
-                     || slave_bus_width == 16 || slave_bus_width == 32,
-                 "slave_bus_width must be 1, 8, 16, or 32");
-
-  using bus_wide_integer = std::conditional_t<
-      slave_bus_width == BUS_WIDTH_1, std::uint8_t,
-      std::conditional_t<slave_bus_width == BUS_WIDTH_8, std::uint8_t,
-                         std::conditional_t<slave_bus_width == BUS_WIDTH_16,
-                                            std::uint16_t, std::uint32_t> > >;
-  bus_wide_integer data{ 0 };
+  using typename bus_width_helper<slave_bus_width>::bus_wide_integer;
 
 public:
   constexpr void
@@ -31,8 +22,7 @@ public:
     for (std::uint8_t idx = 0; idx < slave_bus_width; ++idx)
       {
         this->data = static_cast<bus_wide_integer> (
-            (this->data << 1)
-            | static_cast<bus_wide_integer> ((distrib (gen))));
+            (this->data << 1) | static_cast<std::uint8_t> (distrib (gen)));
       }
   }
 
@@ -41,8 +31,8 @@ public:
   {
     return this->data;
   }
-#ifdef TEST
 
+#if (TEST == 1)
   constexpr std::array<std::uint8_t, slave_bus_width>
   get_data_bits () const noexcept
   {
@@ -52,7 +42,7 @@ public:
 
     for (std::uint8_t i = 0; i < slave_bus_width; ++i)
       {
-        bits[i] = (data & (mask << i)) ? 1 : 0;
+        bits[i] = (this->data & (mask << i)) ? 1 : 0;
       }
 
     return bits;
