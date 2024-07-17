@@ -32,4 +32,8 @@
 *.app
 
 build/
+<<<<<<< HEAD
+=======
+.vs/
+>>>>>>> master
 .cache/
