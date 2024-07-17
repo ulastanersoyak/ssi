@@ -3,7 +3,6 @@
 
 #include "devices/crc.hpp"
 #include <algorithm>
-#include <print>
 
 namespace crc_test
 {
@@ -81,7 +80,6 @@ hash_test () noexcept
     constexpr auto hash32_1 = crc16_hash<data32_1.size ()> (data32_1);
     constexpr auto hash32_0 = crc16_hash<data32_0.size ()> (data32_0);
     constexpr auto hash32_rand = crc16_hash<data32_rand.size ()> (data32_rand);
-    std::println ("{} {} {}", hash32_1, hash32_0, hash32_rand);
     static_assert (hash32_1 == 8939 && hash32_0 == 64510
                        && hash32_rand == 33796,
                    "crc16 for 16 bit bus failed");

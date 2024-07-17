@@ -29,4 +29,5 @@ crc16_hash (const std::array<std::uint8_t, data_width> &bit_array) noexcept
     }
   return crc;
 }
+
 #endif // !CRC_HPP

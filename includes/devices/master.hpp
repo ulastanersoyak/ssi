@@ -1,6 +1,8 @@
 #ifndef MASTER_HPP
 #define MASTER_HPP
 
+#include "devices/crc.hpp"
+#include "interfaces/data_package.hpp"
 #include <cstdint>
 #if (__cplusplus == 202302L)
 #include <print>
@@ -17,6 +19,19 @@ class master : public bus_width_helper<master_bus_width>
   using typename bus_width_helper<master_bus_width>::bus_wide_integer;
   bus_wide_integer data{ 0 };
 
+  [[nodiscard]] constexpr std::array<std::uint8_t, master_bus_width>
+  data_to_bits (bus_wide_integer data_) const noexcept
+  {
+    std::array<std::uint8_t, master_bus_width> bits{};
+    const std::uint8_t mask = 0x01;
+    for (std::uint8_t i = 0; i < master_bus_width; ++i)
+      {
+        bits[i] = static_cast<std::uint8_t> ((data_ & (mask << i)) ? 1 : 0);
+      }
+
+    return bits;
+  }
+
 public:
   constexpr void
   read_data (auto data_) noexcept
@@ -31,15 +46,32 @@ public:
   }
 
   constexpr void
+  receive_data_package (const data_package<bus_wide_integer> &package)
+  {
+    const auto bits = data_to_bits (package.data);
+    const auto hash = crc16_hash<bits.size ()> (bits);
+    if (package.hash == hash)
+      {
+        this->data = package.data;
+        this->process_data ();
+      }
+  }
+
+  constexpr void
   process_data () const noexcept
   {
+#if (__cplusplus == 202302L)
+    std::print ("\nmaster device:\n");
+#else
+    std::cout << "\nmaster device:\n";
+#endif
     for (std::uint8_t idx = 0; idx < master_bus_width; ++idx)
       {
         bool bit = (this->data & (1U << idx));
 #if (__cplusplus == 202302L)
-        std::println ("bit{} := {}", idx, bit ? 1 : 0);
+        std::print ("bit{} := {} ", idx, bit ? 1 : 0);
 #else
-        std::iostream << "bit" << idx << " := " << bit ? 1 : 0 << '\n';
+        std::iostream << "bit" << idx << " := " << bit ? 1 : 0 << ' ';
 #endif
       }
   }
