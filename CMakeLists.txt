@@ -12,13 +12,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-<<<<<<< HEAD
-add_compile_options(
-  -Wall -Wextra -Wpedantic -Werror -Wunused -Wuninitialized -Wshadow -Wconversion -Wduplicated-cond -Wduplicated-branches
-  -Wlogical-op -Wuseless-cast -Wsign-conversion -Wfloat-equal -Weffc++ -Wold-style-cast -Wvexing-parse -Wformat=2 -Wvla 
-  -Wsuggest-override -Wsuggest-final-methods -Wsuggest-final-types -Wnon-virtual-dtor -Wctor-dtor-privacy
-)
-=======
 if(CMAKE_COMPILER_IS_GNUCCXX AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	add_compile_options(
 	  -Wall -Wextra -Wpedantic -Werror -Wunused -Wuninitialized -Wshadow -Wconversion -Wduplicated-cond -Wduplicated-branches
@@ -26,7 +19,6 @@ if(CMAKE_COMPILER_IS_GNUCCXX AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	  -Wsuggest-override -Wsuggest-final-methods -Wsuggest-final-types -Wnon-virtual-dtor -Wctor-dtor-privacy
 	)
 endif()
->>>>>>> master
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 14.1.1)
@@ -43,11 +35,7 @@ endif()
 
 set(CMAKE_BUILD_TYPE Debug)
 
-<<<<<<< HEAD
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-=======
 if(CMAKE_BUILD_TYPE STREQUAL Debug AND CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
->>>>>>> master
   add_compile_options(-g)
 endif()
 

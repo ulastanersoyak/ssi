@@ -10,16 +10,9 @@ main ()
 {
 #if (TEST == 1)
   master_bus_test::bus_byte_size ();
-<<<<<<< HEAD
-  slave_bus_tests::bus_byte_size ();
-  slave_bus_tests::bus_bit_size ();
-#endif // !TEST
-  interface<16> intr;
-=======
   slave_bus_tests::bus_bit_size ();
 #endif // !TEST
   biss8 intr;
->>>>>>> master
   for (int i = 0; i < 10; ++i)
     {
       intr.get_package_from_slave ();
