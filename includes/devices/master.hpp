@@ -49,7 +49,7 @@ public:
   receive_data_package (const data_package<bus_wide_integer> &package)
   {
     const auto bits = data_to_bits (package.data);
-    const auto hash = crc16_hash<bits.size ()> (bits);
+    const auto hash = crc_hash<bits.size ()> (bits);
     if (package.hash == hash)
       {
         this->data = package.data;

@@ -79,7 +79,7 @@ public:
   send_data_package () noexcept
   {
     const auto data_bits = this->get_data_bits ();
-    const auto hash = crc16_hash<data_bits.size ()> (data_bits);
+    const auto hash = crc_hash<data_bits.size ()> (data_bits);
     std::random_device rd;
     std::mt19937 gen (rd ());
     std::uniform_int_distribution<> noise (5, 10);

@@ -43,7 +43,7 @@ public:
         auto data_with_noise
             = static_cast<bus_wide_integer> (pkg.data + noise_variant);
         auto bits = this->data_to_bits (data_with_noise);
-        auto hash = crc16_hash<bits.size ()> (bits);
+        auto hash = crc_hash<bits.size ()> (bits);
         if (hash == pkg.hash)
           {
             this->package = pkg;
@@ -61,7 +61,7 @@ public:
   send_package_to_master () noexcept
   {
     const auto bits = this->data_to_bits (this->package.data);
-    const auto hash = crc16_hash<bits.size ()> (bits);
+    const auto hash = crc_hash<bits.size ()> (bits);
     this->master_.receive_data_package (data_package<bus_wide_integer>{
         .data = this->package.data, .hash = hash });
   }
