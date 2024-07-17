@@ -34,7 +34,7 @@ class interface : public bus_width_helper<interface_bus_width>
   }
 
 public:
-  constexpr void
+  [[nodiscard]] constexpr bool
   get_package_from_slave () noexcept
   {
     this->slave_.read_data ();
@@ -43,30 +43,33 @@ public:
     this->remove_noise (pkg.voltage_bus);
     this->voltage_to_logic (pkg.voltage_bus);
     const auto hash = crc_hash (pkg.voltage_bus);
-    if (hash == pkg.hash)
+    this->package = pkg;
+#if (__cplusplus == 202302L)
+    std::print ("\ninterace:\t");
+#else
+    std::cout << "\ninterface:\t";
+#endif
+    for (std::uint8_t idx = 0; idx < interface_bus_width; ++idx)
       {
-        this->package = pkg;
 #if (__cplusplus == 202302L)
-        std::print ("\nmaster device:\n");
+        std::print ("bit{} := {} ", idx, bit ? 1 : 0);
 #else
-        std::cout << "\ninterface:\n";
+        std::cout << "bit" << static_cast<int> (idx)
+                  << " := " << static_cast<int> (pkg.voltage_bus[idx]) << ' ';
 #endif
-        for (std::uint8_t idx = 0; idx < interface_bus_width; ++idx)
-          {
-#if (__cplusplus == 202302L)
-            std::print ("bit{} := {} ", idx, bit ? 1 : 0);
-#else
-            std::cout << "bit" << static_cast<int> (idx)
-                      << " := " << pkg.voltage_bus[idx] << ' ';
-#endif
-          }
       }
+    if (hash != pkg.hash)
+      {
+        std::cerr << "\ncrc check failed! not forwarding it to the master\n";
+        return false;
+      }
+    return true;
   }
 
-  constexpr void
+  [[nodiscard]] constexpr bool
   send_package_to_master () noexcept
   {
-    const auto hash = crc_hash (this->package.voltage_bus);
+    const auto hash = crc_hash<interface_bus_width> (this->package.voltage_bus);
     std::random_device rd;
     std::mt19937 gen (rd ());
     std::uniform_int_distribution<> noise (0, 2);
@@ -89,8 +92,9 @@ public:
             }
         }
     });
-    data_package pkg = {.voltage_bus = this->package.voltage_bus, .hash = hash };
-    this->master_.receive_data_package (pkg);
+    data_package pkg
+        = { .voltage_bus = this->package.voltage_bus, .hash = static_cast<std::uint32_t> (hash) };
+    return this->master_.receive_data_package (pkg);
   }
 };
 

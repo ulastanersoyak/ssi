@@ -47,26 +47,30 @@ public:
     return this->data_bus;
   }
 
-  constexpr void
+  [[nodiscard]] constexpr bool
   receive_data_package (data_package<master_bus_width> &package)
   {
     this->remove_noise (package.voltage_bus);
     this->voltage_to_logic (package.voltage_bus);
     const auto hash = crc_hash<master_bus_width> (package.voltage_bus);
-    if (package.hash == hash)
+    this->data_bus = package.voltage_bus;
+    this->process_data ();
+    if (hash != package.hash)
       {
-        this->data_bus = package.voltage_bus;
-        this->process_data ();
+        std::cerr << "\ncrc check failed. data corrupted on on the way to the "
+                     "master\n";
+        return false;
       }
+    return true;
   }
 
   constexpr void
   process_data () const noexcept
   {
 #if (__cplusplus == 202302L)
-    std::print ("\nmaster device:\n");
+    std::print ("\nmaster device:\t");
 #else
-    std::cout << "\nmaster device:\n";
+    std::cout << "\nmaster device:\t";
 #endif
     for (std::uint8_t idx = 0; idx < master_bus_width; ++idx)
       {
@@ -74,7 +78,7 @@ public:
         std::print ("bit{} := {} ", idx, bit ? 1 : 0);
 #else
         std::cout << "bit" << static_cast<int> (idx)
-                  << " := " << this->data_bus[idx] << ' ';
+                  << " := " << static_cast<int> (this->data_bus[idx]) << ' ';
 #endif
       }
   }

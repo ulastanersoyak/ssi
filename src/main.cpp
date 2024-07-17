@@ -12,12 +12,23 @@ main ()
   master_bus_test::bus_byte_size ();
   slave_bus_tests::bus_bit_size ();
 #endif // !TEST
-  biss8 intr;
-  for (int i = 0; i < 10; ++i)
+  biss16 intr;
+  std::uint8_t counter{ 0 };
+  constexpr auto transmit_count{ 20 };
+  for (int i = 0; i < transmit_count; ++i)
     {
-      intr.get_package_from_slave ();
-      intr.send_package_to_master ();
+      bool is_crc_passed = intr.get_package_from_slave ();
+      if (is_crc_passed)
+        {
+          bool is_crc_passed = intr.send_package_to_master ();
+          if (is_crc_passed)
+            {
+              ++counter;
+            }
+        }
       std::println ("\n");
     }
+  std::println ("{}/{} data transmitted successfully\n", counter,
+                transmit_count);
   return 0;
 }

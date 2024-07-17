@@ -31,9 +31,9 @@ public:
   print_captured_data ()
   {
 #if (__cplusplus == 202302L)
-    std::print ("\nslave device:\n");
+    std::print ("\nslave device:\t");
 #else
-    std::cout << "\nslave device:\n";
+    std::cout << "\nslave device:\t";
 #endif
     for (std::uint8_t idx = 0; idx < slave_bus_width; ++idx)
       {
@@ -41,7 +41,7 @@ public:
 #if (__cplusplus == 202302L)
         std::print ("bit{} := {} ", idx, bit ? 1 : 0);
 #else
-        std::cout << "bit " << static_cast<int> (idx)
+        std::cout << "bit" << static_cast<int> (idx)
                   << " := " << (bit ? 1 : 0) << ' ';
 #endif
       }
@@ -85,7 +85,7 @@ public:
             }
         }
     });
-    return data_package{ .voltage_bus = this->data_bus, .hash = hash };
+    return data_package{ .voltage_bus = this->data_bus, .hash = static_cast<std::uint32_t>(hash) };
   }
 };
 
