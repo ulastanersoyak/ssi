@@ -41,8 +41,8 @@ public:
 #if (__cplusplus == 202302L)
         std::print ("bit{} := {} ", idx, bit ? 1 : 0);
 #else
-        std::cout << "bit" << static_cast<int> (idx)
-                  << " := " << (bit ? 1 : 0) << ' ';
+        std::cout << "bit" << static_cast<int> (idx) << " := " << (bit ? 1 : 0)
+                  << ' ';
 #endif
       }
   }
@@ -62,7 +62,7 @@ public:
   [[nodiscard]] constexpr data_package<slave_bus_width>
   send_data_package () noexcept
   {
-    const auto hash = crc_hash (this->data_bus);
+    const auto hash = crc_hash<slave_bus_width> (this->data_bus);
     std::random_device rd;
     std::mt19937 gen (rd ());
     std::uniform_int_distribution<> noise (0, 2);
@@ -85,7 +85,8 @@ public:
             }
         }
     });
-    return data_package{ .voltage_bus = this->data_bus, .hash = static_cast<std::uint32_t>(hash) };
+    return data_package{ .voltage_bus = this->data_bus,
+                         .hash = static_cast<std::uint32_t> (hash) };
   }
 };
 

@@ -32,7 +32,7 @@ class master : public bus_width_helper<master_bus_width>
   }
 
 public:
-  [[nodiscard]] constexpr void
+  constexpr void
   read_data_bus (auto &data_bus_) noexcept
   {
     for (std::uint8_t idx = 0; const auto line : data_bus_)
@@ -57,8 +57,14 @@ public:
     this->process_data ();
     if (hash != package.hash)
       {
-        std::cerr << "\ncrc check failed. data corrupted on on the way to the "
+
+#if (__cplusplus == 202302L)
+        std::println (
+            "\ncrc check failed! data corrupted on the way to the master\n");
+#else
+        std::cerr << "\ncrc check failed! data corrupted on on the way to the "
                      "master\n";
+#endif
         return false;
       }
     return true;
@@ -75,10 +81,9 @@ public:
     for (std::uint8_t idx = 0; idx < master_bus_width; ++idx)
       {
 #if (__cplusplus == 202302L)
-        std::print ("bit{} := {} ", idx, bit ? 1 : 0);
+        std::print ("bit{} := {} ", idx, this->data_bus[idx]);
 #else
-        std::cout << "bit" << static_cast<int> (idx)
-                  << " := " << static_cast<int> (this->data_bus[idx]) << ' ';
+        std::cout << "bit" << idx << " := " << this->data_bus[idx] << ' ';
 #endif
       }
   }

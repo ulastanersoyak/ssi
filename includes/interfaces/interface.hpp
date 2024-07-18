@@ -44,7 +44,7 @@ public:
     auto pkg = this->slave_.send_data_package ();
     this->remove_noise (pkg.voltage_bus);
     this->voltage_to_logic (pkg.voltage_bus);
-    const auto hash = crc_hash (pkg.voltage_bus);
+    const auto hash = crc_hash<interface_bus_width> (pkg.voltage_bus);
     this->package = pkg;
 #if (__cplusplus == 202302L)
     std::print ("\ninterace:\t");
@@ -54,15 +54,19 @@ public:
     for (std::uint8_t idx = 0; idx < interface_bus_width; ++idx)
       {
 #if (__cplusplus == 202302L)
-        std::print ("bit{} := {} ", idx, bit ? 1 : 0);
+        std::print ("bit{} := {} ", idx, pkg.voltage_bus[idx]);
 #else
-        std::cout << "bit" << static_cast<int> (idx)
-                  << " := " << static_cast<int> (pkg.voltage_bus[idx]) << ' ';
+        std::cout << "bit" << idx << " := " << pkg.voltage_bus[idx] << ' ';
 #endif
       }
     if (hash != pkg.hash)
       {
+
+#if (__cplusplus == 202302L)
+        std::println ("\ncrc check failed! not forwarding it to the master\n");
+#else
         std::cerr << "\ncrc check failed! not forwarding it to the master\n";
+#endif
         return false;
       }
     return true;
