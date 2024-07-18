@@ -12,6 +12,8 @@
 #include <cstdint>
 #include <random>
 
+// https://www.dynapar.com/Technology/Encoder_Basics/BiSS_Encoders/
+// https://www.encoder.com/ssi
 template <std::uint8_t interface_bus_width>
 class interface : public bus_width_helper<interface_bus_width>
 {
