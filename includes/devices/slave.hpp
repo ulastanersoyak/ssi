@@ -70,13 +70,13 @@ public:
     std::uniform_int_distribution<> noise_chance (0, 1);
     auto chance = noise_chance (gen);
     std::ranges::for_each (this->data_bus, [&] (auto &line) {
+      line = line == 0 ? 0 : 5;
       if (chance == 1)
         {
           auto noise_ = noise (gen);
           if (line == 1)
             {
               auto sign_ = sign (gen);
-              line = 5;
               line = sign_ == 0 ? line + noise_ : line - noise_;
             }
           else

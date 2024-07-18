@@ -69,7 +69,8 @@ public:
   [[nodiscard]] constexpr bool
   send_package_to_master () noexcept
   {
-    const auto hash = crc_hash<interface_bus_width> (this->package.voltage_bus);
+    const auto hash
+        = crc_hash<interface_bus_width> (this->package.voltage_bus);
     std::random_device rd;
     std::mt19937 gen (rd ());
     std::uniform_int_distribution<> noise (0, 2);
@@ -77,13 +78,13 @@ public:
     std::uniform_int_distribution<> noise_chance (0, 1);
     auto chance = noise_chance (gen);
     std::ranges::for_each (this->package.voltage_bus, [&] (auto &line) {
+      line = line == 0 ? 0 : 5;
       if (chance == 1)
         {
           if (line == 1)
             {
               auto noise_ = noise (gen);
               auto sign_ = sign (gen);
-              line = 5;
               line = sign_ == 0 ? line + noise_ : line - noise_;
             }
           else
@@ -92,8 +93,8 @@ public:
             }
         }
     });
-    data_package pkg
-        = { .voltage_bus = this->package.voltage_bus, .hash = static_cast<std::uint32_t> (hash) };
+    data_package pkg = { .voltage_bus = this->package.voltage_bus,
+                         .hash = static_cast<std::uint32_t> (hash) };
     return this->master_.receive_data_package (pkg);
   }
 };
